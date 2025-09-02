@@ -16,7 +16,7 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const baseClasses = [
-    'inline-flex',
+    'flex',
     'items-center',
     'justify-center',
     'cursor-pointer',
@@ -29,8 +29,7 @@ export default function Button({
   const variantClasses: Record<NonNullable<ButtonProps['variant']>, string[]> = {
     primary: [
       'w-full',
-      'max-w-[352px]',
-      'p-4',
+      'p-[15px]',
       'bg-blue-base',
       'text-white',
       'text-base',
@@ -39,7 +38,7 @@ export default function Button({
       'disabled:bg-blue-base/50',
     ],
     secondary: [
-      'p-2', // 8px
+      'p-[7px]', // 8px
       'flex-row',
       'gap-1.5', // 6px
       'rounded', // 4px

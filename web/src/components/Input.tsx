@@ -14,7 +14,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const inputId = id || props.name || undefined
 
   const baseInputClasses = [
-    'max-w-[352px]',
     'w-full',
     'max-h-[48px]',
     'px-4',
@@ -54,12 +53,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     .join(' ')
 
   return (
-    <label className="inline-flex w-full max-w-[352px] flex-col gap-1">
+    <label className="inline-flex w-full flex-col gap-2">
       <span
         className={[
           'text-xs',
           error ? 'text-danger font-bold' : 'text-gray-500',
-          // muda para azul quando ativo (focus-within)
           !error ? 'group-focus:text-blue-base group-focus-within:font-bold' : '',
         ]
           .filter(Boolean)
