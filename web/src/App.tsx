@@ -6,12 +6,16 @@ import LinkRow from "./components/LinkRow"
 import Logo from "./assets/logo.svg"
 import { useState } from "react"
 import { LinkIcon } from "./libs/phosphor-icons"
+// import Redirect from "./pages/Redirect"
+// import NotFound from "./pages/NotFound"
 
 function App() {
   const [hasItems, setHasItems] = useState(false)
 
   return (
     <div className="px-3 md:px-6 lg:px-10 py-8 h-screen w-screen bg-gray-200">
+      {/* <Redirect /> */}
+      {/* <NotFound /> */}
       <div className="max-w-[980px] place-self-center md:place-self-auto md:mt-14 mx-auto mb-6 md:mb-8">
         <img src={Logo} alt="logomarca" width='97px' />
       </div>
