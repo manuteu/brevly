@@ -62,7 +62,7 @@ export const shortenUrl: FastifyPluginAsync = async (server) => {
         originalUrl: string;
         shortCode: string;
       };
-      console.log(request.body)
+
       try {
         // Verificar se o código já existe
         const existingUrl = await db
@@ -95,6 +95,181 @@ export const shortenUrl: FastifyPluginAsync = async (server) => {
         });
       } catch (error) {
         console.error('Erro ao encurtar URL:', error);
+        return reply.status(500).send({
+          error: 'Erro interno do servidor',
+        });
+      }
+    }
+  );
+
+  // Rota GET para listar URLs encurtadas
+  server.get(
+    '/shorten',
+    {
+      schema: {
+        summary: 'Listar URLs encurtadas',
+        tags: ['urls'],
+        response: {
+          200: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                id: { type: 'number' },
+                originalUrl: { type: 'string' },
+                shortCode: { type: 'string' },
+                clicks: { type: 'number' },
+                createdAt: { type: 'string' },
+                shortUrl: { type: 'string' },
+              },
+            },
+          },
+          500: {
+            type: 'object',
+            properties: {
+              error: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
+    async (_request, reply) => {
+      try {
+        const urls = await db.select().from(shortUrlsSchema);
+
+        const withShortUrl = urls.map((u) => ({
+          ...u,
+          shortUrl: `https://brev.ly/${u.shortCode}`,
+        }));
+
+        return reply.status(200).send(withShortUrl);
+      } catch (error) {
+        console.error('Erro ao listar URLs encurtadas:', error);
+        return reply.status(500).send({
+          error: 'Erro interno do servidor',
+        });
+      }
+    }
+  );
+
+  // Rota GET para obter URL original por shortCode (sem redirecionar)
+  server.get(
+    '/shorten/:shortCode',
+    {
+      schema: {
+        summary: 'Obter URL original por código',
+        tags: ['urls'],
+        params: {
+          type: 'object',
+          properties: {
+            shortCode: { type: 'string' },
+          },
+          required: ['shortCode'],
+        },
+        response: {
+          200: {
+            type: 'object',
+            properties: {
+              id: { type: 'number' },
+              originalUrl: { type: 'string' },
+              shortCode: { type: 'string' },
+              clicks: { type: 'number' },
+              createdAt: { type: 'string' },
+              shortUrl: { type: 'string' },
+            },
+          },
+          404: {
+            type: 'object',
+            properties: { error: { type: 'string' } },
+          },
+          500: {
+            type: 'object',
+            properties: { error: { type: 'string' } },
+          },
+        },
+      },
+    },
+    async (request, reply) => {
+      const { shortCode } = request.params as { shortCode: string };
+
+      try {
+        const [url] = await db
+          .select()
+          .from(shortUrlsSchema)
+          .where(eq(shortUrlsSchema.shortCode, shortCode))
+          .limit(1);
+
+        if (!url) {
+          return reply.status(404).send({ error: 'URL não encontrada' });
+        }
+
+        const result = {
+          ...url,
+          shortUrl: `https://brev.ly/${url.shortCode}`,
+        };
+
+        return reply.status(200).send(result);
+      } catch (error) {
+        console.error('Erro ao buscar URL por código:', error);
+        return reply.status(500).send({ error: 'Erro interno do servidor' });
+      }
+    }
+  );
+
+  // Rota DELETE para excluir uma URL encurtada por código
+  server.delete(
+    '/shorten/:shortCode',
+    {
+      schema: {
+        summary: 'Deletar URL encurtada',
+        tags: ['urls'],
+        params: {
+          type: 'object',
+          properties: {
+            shortCode: { type: 'string' },
+          },
+          required: ['shortCode'],
+        },
+        response: {
+          204: {
+            description: 'Item deletado com sucesso',
+          },
+          404: {
+            type: 'object',
+            properties: {
+              error: { type: 'string' },
+            },
+          },
+          500: {
+            type: 'object',
+            properties: {
+              error: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
+    async (request, reply) => {
+      const { shortCode } = request.params as { shortCode: string };
+
+      try {
+        const [existing] = await db
+          .select()
+          .from(shortUrlsSchema)
+          .where(eq(shortUrlsSchema.shortCode, shortCode))
+          .limit(1);
+
+        if (!existing) {
+          return reply.status(404).send({ error: 'URL não encontrada' });
+        }
+
+        await db
+          .delete(shortUrlsSchema)
+          .where(eq(shortUrlsSchema.id, existing.id));
+
+        return reply.status(204).send();
+      } catch (error) {
+        console.error('Erro ao deletar URL:', error);
         return reply.status(500).send({
           error: 'Erro interno do servidor',
         });
