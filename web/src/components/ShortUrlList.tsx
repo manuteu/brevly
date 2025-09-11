@@ -5,14 +5,18 @@ import { LinkIcon } from '../libs/phosphor-icons';
 import Card from './Card';
 import CardTitle from './CardTitle';
 import LinkRow from './LinkRow';
+import { useGenerateReport } from '../hooks/useGenerateReport';
 
 export function ShortUrlList() {
-  const { data, isLoading, error } = useGetUrls();
+  const { data, isLoading, error, refetch } = useGetUrls();
   const mutationDelete = useDeleteUrl();
+  const mutationCSV = useGenerateReport();
 
   const handleConfirmDelete = async (shortenCode: string) => {
     try {
       await mutationDelete.mutateAsync(shortenCode);
+
+      refetch()
     } catch (error) {
       console.error('Erro ao deletar URL:', error);
     }
@@ -22,26 +26,13 @@ export function ShortUrlList() {
     await copyToClipboard(shortUrl);
   };
 
-  if (isLoading) {
-    return (
-      <Card className="w-full h-fit">
-        <div className="flex flex-col gap-5">
-          <CardTitle title="Meus links" hasIcon />
-          <div className="flex justify-center py-8">
-            <span className="text-gray-500">Carregando...</span>
-          </div>
-        </div>
-      </Card>
-    );
-  }
-
   if (error) {
     return (
       <Card className="w-full h-fit">
         <div className="flex flex-col gap-5">
           <CardTitle title="Meus links" hasIcon />
           <div className="flex justify-center py-8">
-            <span className="text-red-500">Erro ao carregar links</span>
+            <span className="text-gray-500">Erro ao carregar links</span>
           </div>
         </div>
       </Card>
@@ -49,9 +40,9 @@ export function ShortUrlList() {
   }
 
   return (
-    <Card className="w-full h-fit">
+    <Card className="w-full h-fit md:flex-1 md:min-w-0" loading={isLoading || mutationDelete.isPending || mutationCSV.isPending}>
       <div className="flex flex-col gap-5">
-        <CardTitle title="Meus links" hasIcon />
+        <CardTitle title="Meus links" hasIcon mutationCSV={mutationCSV} />
         {data && data.length > 0 ? (
           data.map((item) => (
             <div key={item.id} className="flex flex-col gap-4">

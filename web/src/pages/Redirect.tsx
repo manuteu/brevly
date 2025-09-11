@@ -5,7 +5,7 @@ import { useRedirect } from '../hooks/useRedirect'
 
 export default function Redirect() {
   const { shortCode } = useParams<{ shortCode: string }>()
-  const { isLoading, error } = useRedirect(shortCode || '')
+  const { error } = useRedirect(shortCode || '')
 
   return (
     <main className='bg-gray-200'>
@@ -15,8 +15,21 @@ export default function Redirect() {
             <div>
               <img src={LogoIcon} width={48} alt="Brevly Logo" />
             </div>
-
-            {isLoading && (
+            {error ? (
+              <>
+                <span className="text-xl text-gray-600">
+                  {error}
+                </span>
+                <div className="text-center space-y-1">
+                  <p className="text-base text-gray-500 font-semibold">
+                    Redirecionando para a página inicial...
+                  </p>
+                  <p className="text-base text-gray-500 font-semibold">
+                    <a href="/" className="text-base text-blue-base underline">Voltar ao início</a>
+                  </p>
+                </div>
+              </>
+            ) : (
               <>
                 <span className="text-xl text-gray-600">
                   Redirecionando...
@@ -28,22 +41,6 @@ export default function Redirect() {
                   <p className="text-base text-gray-500 font-semibold">
                     Não foi redirecionado?
                     <a href="/" className="text-base text-blue-base ml-1 underline">Voltar ao início</a>
-                  </p>
-                </div>
-              </>
-            )}
-
-            {error && (
-              <>
-                <span className="text-xl text-gray-600">
-                  {error}
-                </span>
-                <div className="text-center space-y-1">
-                  <p className="text-base text-gray-500 font-semibold">
-                    Redirecionando para a página inicial...
-                  </p>
-                  <p className="text-base text-gray-500 font-semibold">
-                    <a href="/" className="text-base text-blue-base underline">Voltar ao início</a>
                   </p>
                 </div>
               </>

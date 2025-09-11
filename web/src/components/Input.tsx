@@ -13,7 +13,6 @@ const inputVariants = cva(
     'text-base',
     'text-gray-600',
     'font-normal',
-    'placeholder:text-gray-400',
     'bg-white',
     'rounded-lg',
     'outline-none',
@@ -32,7 +31,7 @@ const inputVariants = cva(
           'focus:ring-blue-base',
         ],
         error: [
-          'text-blue-base',
+          'text-gray-600',
           'ring-[1.5px]',
           'ring-danger',
         ],
@@ -51,7 +50,7 @@ const labelVariants = cva(
       state: {
         default: [
           'text-gray-500',
-          'group-focus:text-blue-base',
+          'group-focus:text-gray-600',
           'group-focus-within:font-bold',
         ],
         error: [
@@ -71,14 +70,18 @@ interface InputProps
   VariantProps<typeof inputVariants> {
   label: string
   error?: string
+  prefix?: string
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { label, error, className, id, ...props },
+  { label, error, className, id, prefix, ...props },
   ref
 ) {
   const inputId = id || props.name || undefined
   const inputState = error ? 'error' : 'default'
+
+  const hasPrefix = Boolean(prefix)
+  const inputPaddingLeft = hasPrefix ? 'pl-18' : undefined
 
   return (
     <label className="inline-flex w-full flex-col gap-2">
@@ -86,13 +89,18 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         {label}
       </span>
 
-      <div className="group w-full">
+      <div className="group relative w-full">
+        {hasPrefix ? (
+          <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 select-none text-base font-normal">
+            {prefix}
+          </span>
+        ) : null}
         <input
           id={inputId}
           ref={ref}
           aria-invalid={Boolean(error) || undefined}
           aria-describedby={error ? `${inputId}-error` : undefined}
-          className={cn(inputVariants({ state: inputState }), className)}
+          className={cn(inputVariants({ state: inputState }), inputPaddingLeft, className)}
           {...props}
         />
       </div>

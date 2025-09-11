@@ -23,19 +23,41 @@ interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
   VariantProps<typeof cardVariants> {
   children: React.ReactNode
+  loading?: boolean
 }
 
 export default function Card({
   children,
   className,
   padding,
+  loading = false,
   ...props
 }: CardProps) {
   return (
     <div
-      className={cn(cardVariants({ padding }), className)}
+      className={cn('relative', cardVariants({ padding }), className)}
       {...props}
     >
+      {loading && (
+        <>
+          <div className="pointer-events-none absolute left-0 right-0 top-0 h-3 overflow-hidden rounded-t-lg">
+            <div className="absolute inset-0 h-1 bg-blue-base/20" />
+            <div
+              className="absolute top-0 h-1 w-1/3 bg-blue-base"
+              style={{
+                animation: 'brevly-loading-bar 1.2s ease-in-out infinite',
+              }}
+            />
+          </div>
+          <style>{`
+@keyframes brevly-loading-bar {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(50%); }
+  100% { transform: translateX(200%); }
+}
+`}</style>
+        </>
+      )}
       {children}
     </div>
   )

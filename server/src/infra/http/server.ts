@@ -3,6 +3,7 @@ import fastifyCors from '@fastify/cors';
 import { healthCheck } from './routes/health';
 import { shortenUrl } from './routes/shorten';
 import { env } from '../../env';
+import { reportsRoutes } from './routes/reports';
 
 const server = Fastify();
 
@@ -13,6 +14,7 @@ server.register(fastifyCors, {
 
 server.register(healthCheck);
 server.register(shortenUrl);
+server.register(reportsRoutes);
 
 server
   .listen({ port: env.PORT, host: '0.0.0.0' })

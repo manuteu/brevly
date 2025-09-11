@@ -1,7 +1,7 @@
 import { Routes as ReactRouterRoutes, Route } from 'react-router-dom'
-import { Home } from '../pages/Home'
-import NotFound from '../pages/NotFound'
-import Redirect from '../pages/Redirect'
+import { Home } from './pages/Home'
+import NotFound from './pages/NotFound'
+import Redirect from './pages/Redirect'
 
 export function Routes() {
   return (

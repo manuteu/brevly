@@ -12,12 +12,14 @@ export function Home() {
 
   return (
     <div className="px-3 md:px-6 lg:px-10 py-8 h-screen w-screen bg-gray-200">
-      <div className="max-w-[980px] place-self-center md:place-self-auto md:mt-14 mx-auto mb-6 md:mb-8">
-        <img src={Logo} alt="logomarca" width="97px" />
-      </div>
-      <div className="flex flex-col gap-3 md:gap-5 max-w-[980px] mx-auto">
-        <ShortUrlForm onSuccess={handleFormSuccess} />
-        <ShortUrlList />
+      <div className="max-w-[980px] mx-auto">
+        <div className="place-self-center md:place-self-auto md:mt-14 mb-6 md:mb-8">
+          <img src={Logo} alt="logomarca" width="97px" />
+        </div>
+        <div className="flex flex-col md:flex-row gap-3 md:gap-5">
+          <ShortUrlForm onSuccess={handleFormSuccess} />
+          <ShortUrlList />
+        </div>
       </div>
     </div>
   );
