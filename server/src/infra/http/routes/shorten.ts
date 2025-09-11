@@ -203,6 +203,12 @@ export const shortenUrl: FastifyPluginAsync = async (server) => {
           return reply.status(404).send({ error: 'URL não encontrada' });
         }
 
+        // Incrementar contador de cliques
+        await db
+          .update(shortUrlsSchema)
+          .set({ clicks: url.clicks + 1 })
+          .where(eq(shortUrlsSchema.id, url.id));
+
         const result = {
           ...url,
           shortUrl: `https://brev.ly/${url.shortCode}`,
@@ -270,72 +276,6 @@ export const shortenUrl: FastifyPluginAsync = async (server) => {
         return reply.status(204).send();
       } catch (error) {
         console.error('Erro ao deletar URL:', error);
-        return reply.status(500).send({
-          error: 'Erro interno do servidor',
-        });
-      }
-    }
-  );
-
-  // Rota GET para redirecionar URL encurtada
-  server.get(
-    '/:shortCode',
-    {
-      schema: {
-        summary: 'Redirecionar URL encurtada',
-        tags: ['urls'],
-        params: {
-          type: 'object',
-          properties: {
-            shortCode: { type: 'string' },
-          },
-        },
-        response: {
-          302: {
-            description: 'Redirecionamento para URL original',
-          },
-          404: {
-            type: 'object',
-            properties: {
-              error: { type: 'string' },
-            },
-          },
-          500: {
-            type: 'object',
-            properties: {
-              error: { type: 'string' },
-            },
-          },
-        },
-      },
-    },
-    async (request, reply) => {
-      const { shortCode } = request.params as { shortCode: string };
-
-      try {
-        // Buscar URL pelo código
-        const [url] = await db
-          .select()
-          .from(shortUrlsSchema)
-          .where(eq(shortUrlsSchema.shortCode, shortCode))
-          .limit(1);
-
-        if (!url) {
-          return reply.status(404).send({
-            error: 'URL não encontrada',
-          });
-        }
-
-        // Incrementar contador de cliques
-        await db
-          .update(shortUrlsSchema)
-          .set({ clicks: url.clicks + 1 })
-          .where(eq(shortUrlsSchema.id, url.id));
-
-        // Redirecionar para URL original
-        return reply.redirect(url.originalUrl, 302);
-      } catch (error) {
-        console.error('Erro ao redirecionar URL:', error);
         return reply.status(500).send({
           error: 'Erro interno do servidor',
         });

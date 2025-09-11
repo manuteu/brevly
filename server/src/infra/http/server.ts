@@ -1,12 +1,15 @@
 import Fastify from 'fastify';
-import { fastifyCors } from '@fastify/cors';
+import fastifyCors from '@fastify/cors';
 import { healthCheck } from './routes/health';
 import { shortenUrl } from './routes/shorten';
 import { env } from '../../env';
 
 const server = Fastify();
 
-server.register(fastifyCors, { origin: '*' });
+server.register(fastifyCors, { 
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+});
 
 server.register(healthCheck);
 server.register(shortenUrl);

@@ -1,14 +1,42 @@
-import React from 'react';
+import React from 'react'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from '../utils/cn'
 
-interface CardProps {
-  children: React.ReactNode;
-  className?: string;
+const cardVariants = cva(
+  'bg-white rounded-lg',
+  {
+    variants: {
+      padding: {
+        default: 'md:p-8 p-6',
+        sm: 'p-4',
+        lg: 'md:p-10 p-8',
+        none: 'p-0',
+      },
+    },
+    defaultVariants: {
+      padding: 'default',
+    },
+  }
+)
+
+interface CardProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+  VariantProps<typeof cardVariants> {
+  children: React.ReactNode
 }
 
-export default function Card({ children, className = '' }: CardProps) {
+export default function Card({
+  children,
+  className,
+  padding,
+  ...props
+}: CardProps) {
   return (
-    <div className={`md:p-8 p-6 bg-white rounded-lg ${className}`}>
+    <div
+      className={cn(cardVariants({ padding }), className)}
+      {...props}
+    >
       {children}
     </div>
-  );
+  )
 }

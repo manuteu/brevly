@@ -1,21 +1,10 @@
 import type { ComponentProps, ComponentType } from 'react'
+import { cva, type VariantProps } from 'class-variance-authority'
 import * as Icons from '../libs/phosphor-icons'
+import { cn } from '../utils/cn'
 
-interface ButtonProps extends ComponentProps<'button'> {
-  variant?: 'primary' | 'secondary'
-  label?: string
-  icon?: keyof typeof Icons
-}
-
-export default function Button({
-  variant = 'primary',
-  className,
-  children,
-  label,
-  icon,
-  ...props
-}: ButtonProps) {
-  const baseClasses = [
+const buttonVariants = cva(
+  [
     'flex',
     'items-center',
     'justify-center',
@@ -24,43 +13,57 @@ export default function Button({
     'duration-300',
     'disabled:opacity-50',
     'disabled:cursor-not-allowed',
-  ]
-
-  const variantClasses: Record<NonNullable<ButtonProps['variant']>, string[]> = {
-    primary: [
-      'w-full',
-      'p-[15px]',
-      'bg-blue-base',
-      'text-white',
-      'text-base',
-      'rounded-lg',
-      'hover:bg-blue-dark',
-      'disabled:bg-blue-base/50',
-    ],
-    secondary: [
-      'p-[7px]', // 8px
-      'flex-row',
-      'gap-1.5', // 6px
-      'rounded', // 4px
-      'bg-gray-200',
-      'text-sm',
-      'font-semibold', // semi-bold
-      'text-gray-500',
-      'border',
-      'border-transparent',
-      'hover:border-blue-base',
-      'focus:border-blue-base',
-    ],
+  ],
+  {
+    variants: {
+      variant: {
+        primary: [
+          'w-full',
+          'p-[15px]',
+          'bg-blue-base',
+          'text-white',
+          'text-base',
+          'rounded-lg',
+          'hover:bg-blue-dark',
+          'disabled:bg-blue-base/50',
+        ],
+        secondary: [
+          'p-[7px]',
+          'flex-row',
+          'gap-1.5',
+          'rounded',
+          'bg-gray-200',
+          'text-sm',
+          'font-semibold',
+          'text-gray-500',
+          'border',
+          'border-transparent',
+          'hover:border-blue-base',
+          'focus:border-blue-base',
+        ],
+      },
+    },
+    defaultVariants: {
+      variant: 'primary',
+    },
   }
+)
 
-  const classes = [
-    ...baseClasses,
-    ...variantClasses[variant],
-    className || '',
-  ]
-    .filter(Boolean)
-    .join(' ')
+interface ButtonProps
+  extends ComponentProps<'button'>,
+  VariantProps<typeof buttonVariants> {
+  label?: string
+  icon?: keyof typeof Icons
+}
 
+export default function Button({
+  variant,
+  className,
+  children,
+  label,
+  icon,
+  ...props
+}: ButtonProps) {
   const content = label ?? children
 
   const IconComponent: ComponentType<{ size?: number; className?: string }> | null =
@@ -71,7 +74,11 @@ export default function Button({
   const ariaLabel = typeof content === 'string' ? content : undefined
 
   return (
-    <button className={classes} aria-label={ariaLabel} {...props}>
+    <button
+      className={cn(buttonVariants({ variant }), className)}
+      aria-label={ariaLabel}
+      {...props}
+    >
       {IconComponent ? <IconComponent size={16} className="shrink-0" /> : null}
       {typeof content === 'string' ? <span>{content}</span> : content}
     </button>
