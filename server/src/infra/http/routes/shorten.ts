@@ -4,7 +4,6 @@ import { shortUrlsSchema } from '../../db/schemas/index';
 import { eq } from 'drizzle-orm';
 
 export const shortenUrl: FastifyPluginAsync = async (server) => {
-  // Rota POST para criar URL encurtada
   server.post(
     '/shorten',
     {
@@ -64,7 +63,6 @@ export const shortenUrl: FastifyPluginAsync = async (server) => {
       };
 
       try {
-        // Verificar se o código já existe
         const existingUrl = await db
           .select()
           .from(shortUrlsSchema)
@@ -77,7 +75,6 @@ export const shortenUrl: FastifyPluginAsync = async (server) => {
           });
         }
 
-        // Inserir nova URL encurtada
         const [newUrl] = await db
           .insert(shortUrlsSchema)
           .values({
@@ -102,7 +99,6 @@ export const shortenUrl: FastifyPluginAsync = async (server) => {
     }
   );
 
-  // Rota GET para listar URLs encurtadas
   server.get(
     '/shorten',
     {
@@ -152,7 +148,6 @@ export const shortenUrl: FastifyPluginAsync = async (server) => {
     }
   );
 
-  // Rota GET para obter URL original por shortCode (sem redirecionar)
   server.get(
     '/shorten/:shortCode',
     {
@@ -203,7 +198,6 @@ export const shortenUrl: FastifyPluginAsync = async (server) => {
           return reply.status(404).send({ error: 'URL não encontrada' });
         }
 
-        // Incrementar contador de cliques
         await db
           .update(shortUrlsSchema)
           .set({ clicks: url.clicks + 1 })
@@ -222,7 +216,6 @@ export const shortenUrl: FastifyPluginAsync = async (server) => {
     }
   );
 
-  // Rota DELETE para excluir uma URL encurtada por código
   server.delete(
     '/shorten/:shortCode',
     {

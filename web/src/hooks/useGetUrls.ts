@@ -9,7 +9,7 @@ export function useGetUrls() {
       const response = await api.get('/shorten');
       return response.data;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutos
+    staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 }
