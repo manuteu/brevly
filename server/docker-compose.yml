@@ -13,6 +13,39 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: brevly_backend
+    restart: always
+    ports:
+      - "3333:3333"
+    environment:
+      # Configurações da aplicação
+      NODE_ENV: production
+      PORT: 3333
+      
+      # Database
+      DATABASE_URL: postgres://app_user:app_password@postgres:5432/app_db
+      
+      # Cloudflare R2 - Configure com seus valores reais
+      CLOUDFLARE_ACCOUNT_ID: ${CLOUDFLARE_ACCOUNT_ID}
+      CLOUDFLARE_ACCESS_KEY_ID: ${CLOUDFLARE_ACCESS_KEY_ID}
+      CLOUDFLARE_SECRET_ACCESS_KEY: ${CLOUDFLARE_SECRET_ACCESS_KEY}
+      CLOUDFLARE_BUCKET: ${CLOUDFLARE_BUCKET}
+      CLOUDFLARE_PUBLIC_URL: ${CLOUDFLARE_PUBLIC_URL}
+    depends_on:
+      - postgres
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

@@ -5,7 +5,7 @@ export default defineConfig({
     outDir: "dist",
     target: "node23",
     lib: {
-      entry: "src/server.ts",
+      entry: "src/infra/http/server.ts",
       formats: ["es"]
     },
     rollupOptions: {
