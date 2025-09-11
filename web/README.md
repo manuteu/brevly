@@ -73,12 +73,3 @@ Certifique-se de que o backend está rodando e acessível na URL configurada em 
 ```env
 VITE_END_POINT=http://localhost:3333/
 ```
-
-## ✅ Status
-- ✅ React Router DOM configurado
-- ✅ Rotas implementadas
-- ✅ Hook de redirect criado
-- ✅ Páginas 404 e Redirect funcionais
-- ✅ TypeScript sem erros
-- ✅ Build funcionando
-- ✅ Servidor de desenvolvimento funcionando
