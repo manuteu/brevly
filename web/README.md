@@ -1,6 +1,6 @@
-# ��� Sistema de Rotas - Brevly
+# Sistema de Rotas - Brevly
 
-## ��� Rotas Implementadas
+## Rotas Implementadas
 
 ### 1. **Página Inicial** - `/`
 - **Componente**: `Home`
@@ -24,7 +24,7 @@
   - Exibe mensagem de link não encontrado
   - Link para voltar à página inicial
 
-## ��� Configuração Técnica
+## Configuração Técnica
 
 ### Dependências Adicionadas
 - `react-router-dom` - Gerenciamento de rotas
@@ -45,7 +45,7 @@
 └── * (Not Found - catch all)
 ```
 
-## ��� Como Usar
+## Como Usar
 
 ### Desenvolvimento
 ```bash
