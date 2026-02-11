@@ -1,14 +1,14 @@
-# Ì∞≥ Docker Setup - Brevly Backend
+# Docker Setup - Brevly Backend
 
 Este documento explica como executar o backend do Brevly usando Docker.
 
-## Ì≥ã Pr√©-requisitos
+## Pr√©-requisitos
 
 - Docker
 - Docker Compose
 - Conta no Cloudflare R2 (para armazenamento)
 
-## Ì∫Ä Como executar
+## Como executar
 
 ### 1. Configurar vari√°veis de ambiente
 
@@ -46,7 +46,7 @@ docker-compose up -d --build
 docker-compose exec app pnpm run db:migrate
 ```
 
-## Ì¥ß Comandos √∫teis
+## Comandos √∫teis
 
 ```bash
 # Parar todos os servi√ßos
@@ -68,7 +68,7 @@ docker-compose up --build app
 docker build -t brevly-backend .
 ```
 
-## Ìºê Acessos
+## Acessos
 
 - **API Backend**: http://localhost:3333
 - **PostgreSQL**: localhost:5432
@@ -76,14 +76,14 @@ docker build -t brevly-backend .
   - Senha: `app_password`
   - Database: `app_db`
 
-## Ì≥Å Estrutura dos arquivos Docker
+## Estrutura dos arquivos Docker
 
 - `Dockerfile`: Configura√ß√£o da imagem da aplica√ß√£o
 - `docker-compose.yml`: Orquestra√ß√£o dos servi√ßos
 - `.dockerignore`: Arquivos ignorados no build
 - `.env.example`: Exemplo de vari√°veis de ambiente
 
-## Ì¥í Seguran√ßa
+## Seguran√ßa
 
 - A aplica√ß√£o executa como usu√°rio n√£o-root
 - Vari√°veis sens√≠veis s√£o carregadas do arquivo `.env`
